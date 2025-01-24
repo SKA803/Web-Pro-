@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>إضافة موقع</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 0;
+      direction: rtl;
+      text-align: center;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 15px;
+      font-size: 24px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: right;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header>إضافة موقع جديد</header>
+  <div class="container">
+    <form id="add-site-form">
+      <div class="form-group">
+        <label for="site-name">اسم الموقع</label>
+        <input type="text" id="site-name" placeholder="أدخل اسم الموقع" required>
+      </div>
+      <div class="form-group">
+        <label for="site-description">وصف الموقع</label>
+        <input type="text" id="site-description" placeholder="أدخل وصف الموقع" required>
+      </div>
+      <div class="form-group">
+        <label for="site-link">رابط الموقع</label>
+        <input type="url" id="site-link" placeholder="أدخل رابط الموقع" required>
+      </div>
+      <div class="form-group">
+        <label for="site-category">تصنيف الموقع</label>
+        <input type="text" id="new-category" placeholder="أدخل تصنيف جديد">
+        <select id="existing-category">
+          <option value="">اختر تصنيف موجود</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="site-icon">أيقونة الموقع</label>
+        <input type="file" id="site-icon" accept="image/*">
+      </div>
+      <button type="submit">حفظ البيانات</button>
+      <button type="button" onclick="location.href='component.html'">ويب برو</button>
+    </form>
+  </div>
+
+  <script>
+    const categories = JSON.parse(localStorage.getItem("categories")) || [];
+    const sites = JSON.parse(localStorage.getItem("sites")) || [];
+    const existingCategorySelect = document.getElementById("existing-category");
+
+    function updateCategoryList() {
+      existingCategorySelect.innerHTML = '<option value="">اختر تصنيف موجود</option>';
+      categories.forEach(category => {
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        existingCategorySelect.appendChild(option);
+      });
+    }
+
+    updateCategoryList();
+
+    document.getElementById("add-site-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const siteName = document.getElementById("site-name").value;
+      const siteDescription = document.getElementById("site-description").value;
+      const siteLink = document.getElementById("site-link").value;
+      const newCategory = document.getElementById("new-category").value;
+      const existingCategory = document.getElementById("existing-category").value;
+      const siteIcon = document.getElementById("site-icon").files[0];
+
+      let categoryToUse;
+
+      if (newCategory) {
+        categoryToUse = newCategory;
+        if (!categories.includes(newCategory)) {
+          categories.push(newCategory);
+          localStorage.setItem("categories", JSON.stringify(categories));
+          updateCategoryList();
+        }
+      } else if (existingCategory) {
+        categoryToUse = existingCategory;
+      } else {
+        alert("يرجى اختيار تصنيف أو إضافة تصنيف جديد");
+        return;
+      }
+
+      if (!siteIcon) {
+        alert("يرجى اختيار أيقونة للموقع");
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const siteData = {
+          name: siteName,
+          description: siteDescription,
+          link: siteLink,
+          category: categoryToUse,
+          icon: e.target.result, // حفظ الصورة كـ base64
+        };
+
+        sites.push(siteData);
+        localStorage.setItem("sites", JSON.stringify(sites));
+        document.getElementById("add-site-form").reset();
+        alert("تم حفظ البيانات بنجاح!");
+      };
+
+      reader.readAsDataURL(siteIcon);
+    });
+  </script>
+</body>
+</html>

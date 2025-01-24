@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Web Pro - ويب برو </title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      font-size: 18px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .menu-icon {
+      font-size: 20px;
+      cursor: pointer;
+      position: absolute;
+      left: 10px;
+    }
+
+    .dark-mode-icon {
+      font-size: 20px;
+      cursor: pointer;
+      position: absolute;
+      right: 10px;
+    }
+
+    .search-bar {
+      margin: 20px auto;
+      width: 80%;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-bar input {
+      width: 70%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .site {
+      background-color: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      text-align: center;
+      transition: transform 0.2s, background-color 0.3s;
+    }
+
+    .site img {
+      width: 50px;
+      height: 50px;
+      margin-bottom: 10px;
+      border-radius: 50%;
+    }
+
+    .site:hover {
+      background-color: #f1f1f1;
+      transform: scale(1.05);
+    }
+
+    .highlight {
+      animation: highlight 0.5s ease-in-out;
+    }
+
+    @keyframes highlight {
+      0% { background-color: yellow; }
+      100% { background-color: white; }
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      width: 200px;
+      height: 100%;
+      background-color: #343a40;
+      color: white;
+      padding: 20px;
+      padding-top: 60px;
+      overflow-y: auto;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      transition: left 0.3s;
+    }
+
+    .sidebar.open {
+      left: 0;
+    }
+
+    .sidebar h3 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .sidebar ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .sidebar ul li {
+      padding: 10px;
+      background-color: #495057;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      text-align: center;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .sidebar ul li:hover {
+      background-color: #6c757d;
+    }
+
+    .counter {
+      margin: 20px;
+      font-size: 18px;
+      color: #007bff;
+    }
+
+    .no-results {
+      color: #dc3545;
+      font-size: 18px;
+      margin: 20px;
+      display: none;
+    }
+
+    .dark-mode {
+      background-color: #333;
+      color: white;
+    }
+
+    .dark-mode .site {
+      background-color: #444;
+      color: white;
+    }
+
+    .dark-mode .sidebar {
+      background-color: #222;
+    }
+
+    .dark-mode .menu-icon {
+      color: white;
+    }
+    
+  </style>
+</head>
+<body>
+  <header>
+      
+    <span class="menu-icon" onclick="toggleSidebar()">☰</span>
+      <a href="index.html" class="footer-link">Web Pro</a>
+    <span class="dark-mode-icon" onclick="toggleDarkMode()">🌛</span>
+  </header>
+
+  <div class="search-bar">
+    <input type="text" id="searchBar" placeholder="ابحث عن موقع...">
+  </div>
+  <div class="counter" id="counter">عدد المواقع: 0</div>
+  
+  <div class="no-results" id="noResults">لا توجد نتائج مطابقة</div>
+  <div id="grid" class="grid"></div>
+
+  <div class="sidebar" id="sidebar">
+    <h3>التصنيفات</h3>
+    <ul id="categories"></ul>
+  </div>
+
+  <script>
+    const sidebar = document.getElementById("sidebar");
+    const sites = JSON.parse(localStorage.getItem("sites")) || [];
+    const categories = JSON.parse(localStorage.getItem("categories")) || [];
+    const grid = document.getElementById("grid");
+    const searchBar = document.getElementById("searchBar");
+    const counter = document.getElementById("counter");
+    const noResults = document.getElementById("noResults");
+    const categoriesList = document.getElementById("categories");
+
+    function toggleSidebar() {
+      sidebar.classList.toggle("open");
+    }
+
+    function updateCounter() {
+      counter.textContent = `عدد المواقع: ${sites.length}`;
+    }
+
+    function displayCategories() {
+      categoriesList.innerHTML = "";
+      categories.forEach(category => {
+        const li = document.createElement("li");
+        li.textContent = category;
+
+        li.addEventListener("click", () => {
+          const matchedSites = sites.filter(site => site.category === category);
+
+          if (matchedSites.length > 0) {
+            grid.innerHTML = "";
+            matchedSites.forEach((site, index) => {
+              const siteDiv = document.createElement("div");
+              siteDiv.classList.add("site");
+              siteDiv.setAttribute("data-index", index);
+
+              siteDiv.innerHTML = `
+                <img src="${site.icon}" alt="Icon">
+                <p>${site.name}</p>
+              `;
+
+              siteDiv.addEventListener("click", () => {
+                localStorage.setItem("selectedSite", JSON.stringify(site));
+                window.location.href = "details.html";
+              });
+
+              grid.appendChild(siteDiv);
+            });
+            updateCounter();
+          } else {
+            alert(`لا توجد مواقع تطابق التصنيف: ${category}`);
+          }
+        });
+
+        categoriesList.appendChild(li);
+      });
+    }
+
+    function displaySites() {
+      grid.innerHTML = "";
+      sites.forEach((site, index) => {
+        const siteDiv = document.createElement("div");
+        siteDiv.classList.add("site");
+        siteDiv.setAttribute("data-index", index);
+
+        siteDiv.innerHTML = `
+          <img src="${site.icon}" alt="Icon">
+          <p>${site.name}</p>
+        `;
+
+        siteDiv.addEventListener("click", () => {
+          localStorage.setItem("selectedSite", JSON.stringify(site));
+          window.location.href = "details.html";
+        });
+
+        grid.appendChild(siteDiv);
+      });
+      updateCounter();
+    }
+
+    searchBar.addEventListener("input", () => {
+      const query = searchBar.value.toLowerCase();
+      const allSites = document.querySelectorAll(".site");
+      let resultsFound = false;
+
+      allSites.forEach(site => {
+        const siteName = site.querySelector("p").textContent.toLowerCase();
+        if (siteName.includes(query)) {
+          site.style.display = "block";
+          site.classList.add('highlight');
+          resultsFound = true;
+        } else {
+          site.style.display = "none";
+          site.classList.remove('highlight');
+        }
+      });
+
+      noResults.style.display = resultsFound ? "none" : "block";
+    });
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+      const darkModeIcon = document.querySelector('.dark-mode-icon');
+      darkModeIcon.textContent = document.body.classList.contains('dark-mode') ? '🌞' : '🌛';
+    }
+
+    displaySites();
+    displayCategories();
+  </script>
+  
+  <footer>
+    <div class="footer-content">
+      <a href="about.html" class="footer-link">من نحن</a> |
+      <a href="privacy.html" class="footer-link">سياسة الخصوصية</a>|
+      <a href="mailto:abdullah@example.com" class="footer-link">اتصل بنا</a>|
+        
+       <a href="Terms.html" class="footer-link">اتفاقيه المستخدم</a>|
+<a href="To.html" class="footer-link" style="color: rgb(0, 123, 255);"> .</a>
+    </div>    </a>
+    <p class="footer-rights">جميع الحقوق محفوظة &copy; 2025</p>
+  </footer>
+
+  <style>
+    footer {
+      background-color: #007bff;
+      color: white;
+      padding: 20px 10px;
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .footer-content {
+      margin-bottom: 10px;
+    }
+
+    .footer-link {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 16px;
+      transition: color 0.3s ease-in-out;
+    }
+
+    .footer-link:hover {
+      color: #ffc107;
+    }
+
+    .footer-rights {
+      margin: 0;
+      font-size: 14px;
+    }
+  </style>
+</body>
+</html>

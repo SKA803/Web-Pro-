@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>من نحن - Web Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            line-height: 1.8;
+        }
+
+        header {
+            background: linear-gradient(to right, #2980b9, #2c3e50);
+            color: #fff;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .section {
+            background: #fff;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #2980b9;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .section p {
+            margin-bottom: 10px;
+        }
+
+        .section .icon {
+            font-size: 24px;
+            color: #2980b9;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px 0;
+            background: #2c3e50;
+            color: #fff;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+
+        footer a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 10px;
+            background: #2980b9;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background: #2c3e50;
+        }
+
+        /* Animations */
+        .section {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .section:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        .section:nth-child(odd) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>من نحن</h1>
+        <p>Web Pro - أفضل المواقع في كل التخصصات</p>
+    </header>
+
+    <div class="container">
+        <!-- قسم الهدف -->
+        <section class="section">
+            <h2><span class="icon">🎯</span> هدف الموقع</h2>
+            <p>موقع <strong>Web Pro</strong> يهدف إلى تقديم أفضل المواقع في جميع التخصصات المختلفة بشكل مرتب وسهل الاستخدام، مع وصف مختصر لكل موقع لمساعدتك في الوصول إلى أفضل الموارد.</p>
+        </section>
+
+        <!-- قسم الرسالة -->
+        <section class="section">
+            <h2><span class="icon">📜</span> رسالتنا</h2>
+            <p>رسالتنا هي توفير مكتبة متكاملة من المواقع المفيدة التي تغطي مختلف المجالات، مما يتيح للمستخدمين الوصول بسهولة إلى أفضل الأدوات والموارد على الإنترنت.</p>
+        </section>
+
+        <!-- قسم المبرمج -->
+      <section class="section">
+    <h2><span class="icon">👨‍💻</span> عن المبرمج</h2>
+    <p>تم تطوير هذا الموقع بواسطة <strong>عبدالله ندا محمد السيد</strong>.</p>
+    <p>عبدالله متخصص في برمجة وتطوير المواقع، ويهدف إلى إنشاء حلول تقنية تلبي احتياجات المستخدمين بشكل بسيط وفعال.</p>
+    <p>للتواصل مع المبرمج لأي استفسار أو ملاحظات، يمكنكم مراسلته عبر البريد الإلكتروني: <a href="mailto:abdullah@example.com" class="btn">تواصل مع المبرمج</a>.</p>
+</section>
+        
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة &copy; 2024 - Web Pro</p>
+       <a href="google.html" class="btn">الرئاسي</a> | 
+        <a href="privacy.html" class="btn">الخصوصيه</a> | 
+       <a href="mailto:abdullah@example.com" class="btn">اتصل بنا</a>
+    </footer>
+</body>
+</html>

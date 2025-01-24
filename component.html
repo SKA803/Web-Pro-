@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>صفحة الإدارة</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+
+    header {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    .container {
+      margin: 20px auto;
+      width: 90%;
+      max-width: 600px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+
+    input, select, button {
+      width: calc(100% - 20px);
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .list {
+      margin-top: 20px;
+    }
+
+    .item {
+      background-color: #f8f9fa;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item button {
+      background-color: #dc3545;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    صفحة الإدارة
+  </header>
+
+  <div class="container">
+    <h3>إضافة قسم جديد</h3>
+    <input type="text" id="categoryName" placeholder="اسم القسم">
+    <button onclick="addCategory()">إضافة القسم</button>
+
+    <h3>إضافة موقع جديد</h3>
+    <input type="text" id="siteName" placeholder="اسم الموقع">
+    <input type="url" id="siteUrl" placeholder="رابط الموقع">
+    <select id="siteCategory">
+      <option value="">اختر القسم</option>
+    </select>
+    <button onclick="addSite()">إضافة الموقع</button>
+
+    <h3>الأقسام</h3>
+    <div id="categoryList" class="list"></div>
+
+    <h3>المواقع</h3>
+    <div id="siteList" class="list"></div>
+  </div>
+
+  <script>
+    let categories = JSON.parse(localStorage.getItem("categories")) || [];
+    let sites = JSON.parse(localStorage.getItem("sites")) || [];
+
+    function updateLocalStorage() {
+      localStorage.setItem("categories", JSON.stringify(categories));
+      localStorage.setItem("sites", JSON.stringify(sites));
+    }
+
+    function displayCategories() {
+      const categoryList = document.getElementById("categoryList");
+      const siteCategory = document.getElementById("siteCategory");
+      categoryList.innerHTML = "";
+      siteCategory.innerHTML = `<option value="">اختر القسم</option>`;
+      categories.forEach((category, index) => {
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `
+          <span>${category}</span>
+          <button onclick="deleteCategory(${index})">حذف</button>
+        `;
+        categoryList.appendChild(div);
+
+        const option = document.createElement("option");
+        option.value = category;
+        option.textContent = category;
+        siteCategory.appendChild(option);
+      });
+    }
+
+    function displaySites() {
+      const siteList = document.getElementById("siteList");
+      siteList.innerHTML = "";
+      sites.forEach((site, index) => {
+        const div = document.createElement("div");
+        div.classList.add("item");
+        div.innerHTML = `
+          <span>${site.name} (${site.category})</span>
+          <button onclick="deleteSite(${index})">حذف</button>
+        `;
+        siteList.appendChild(div);
+      });
+    }
+
+    function addCategory() {
+      const categoryName = document.getElementById("categoryName").value.trim();
+      if (categoryName && !categories.includes(categoryName)) {
+        categories.push(categoryName);
+        updateLocalStorage();
+        displayCategories();
+        document.getElementById("categoryName").value = "";
+      } else {
+        alert("القسم موجود بالفعل أو الاسم غير صالح!");
+      }
+    }
+
+    function deleteCategory(index) {
+      const categoryToDelete = categories[index];
+      categories.splice(index, 1);
+      sites = sites.filter(site => site.category !== categoryToDelete);
+      updateLocalStorage();
+      displayCategories();
+      displaySites();
+    }
+
+    function addSite() {
+      const siteName = document.getElementById("siteName").value.trim();
+      const siteUrl = document.getElementById("siteUrl").value.trim();
+      const siteCategory = document.getElementById("siteCategory").value;
+
+      if (siteName && siteUrl && siteCategory) {
+        sites.push({ name: siteName, url: siteUrl, category: siteCategory });
+        updateLocalStorage();
+        displaySites();
+        document.getElementById("siteName").value = "";
+        document.getElementById("siteUrl").value = "";
+        document.getElementById("siteCategory").value = "";
+      } else {
+        alert("يجب إدخال جميع البيانات بشكل صحيح!");
+      }
+    }
+
+    function deleteSite(index) {
+      sites.splice(index, 1);
+      updateLocalStorage();
+      displaySites();
+    }
+
+    displayCategories();
+    displaySites();
+  </script>
+</body>
+</html>

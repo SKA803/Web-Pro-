@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تفاصيل الموقع</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f9fa;
+      text-align: center;
+    }
+
+    .container {
+      margin: 20px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      max-width: 500px;
+      width: 90%;
+      box-sizing: border-box;
+    }
+
+    .container img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin-bottom: 20px;
+    }
+
+    .container h1 {
+      margin-bottom: 10px;
+      font-size: 1.5em;
+      word-wrap: break-word;
+    }
+
+    .container p {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      color: #555;
+      word-wrap: break-word;
+    }
+
+    .container a {
+      display: inline-block;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 5px;
+      font-size: 1.1em;
+    }
+
+    .container a:hover {
+      background-color: #0056b3;
+    }
+
+    /* تحسين التصميم للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .container {
+        margin: 20px;
+        padding: 15px;
+        max-width: 100%;
+      }
+
+      .container img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .container h1 {
+        font-size: 1.3em;
+      }
+
+      .container p {
+        font-size: 1em;
+      }
+
+      .container a {
+        font-size: 1em;
+        padding: 8px 16px;
+      }
+    }
+
+    /* تحسين التصميم للأجهزة الكبيرة */
+    @media (min-width: 1024px) {
+      .container {
+        max-width: 600px;
+      }
+
+      .container img {
+        width: 120px;
+        height: 120px;
+      }
+
+      .container h1 {
+        font-size: 1.8em;
+      }
+
+      .container p {
+        font-size: 1.2em;
+      }
+
+      .container a {
+        font-size: 1.2em;
+        padding: 12px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="site-icon" alt="Icon">
+    <h1 id="site-name"></h1>
+    <p id="site-description"></p>
+    <a id="site-link" target="_blank">زيارة الموقع</a>
+  </div>
+
+  <script>
+    // استيراد بيانات الموقع المحدد
+    const selectedSite = JSON.parse(localStorage.getItem("selectedSite"));
+
+    if (selectedSite) {
+      document.getElementById("site-icon").src = selectedSite.icon;
+      document.getElementById("site-name").textContent = selectedSite.name;
+      document.getElementById("site-description").textContent = selectedSite.description;
+      const linkElement = document.getElementById("site-link");
+      linkElement.href = selectedSite.link;
+      linkElement.textContent = "زيارة " + selectedSite.name;
+    } else {
+      alert("لم يتم العثور على بيانات الموقع!");
+      window.location.href = "index.html"; // الرجوع لصفحة القائمة
+    }
+  </script>
+</body>
+</html>
