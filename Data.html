@@ -67,29 +67,29 @@
 <body>
   <header>إضافة موقع جديد</header>
   <div class="container">
-    <form id="add-site-form">
+    <form action="process.php" method="post" enctype="multipart/form-data"> <!-- تغيير action إلى process.php -->
       <div class="form-group">
         <label for="site-name">اسم الموقع</label>
-        <input type="text" id="site-name" placeholder="أدخل اسم الموقع" required>
+        <input type="text" id="site-name" name="site-name" placeholder="أدخل اسم الموقع" required>
       </div>
       <div class="form-group">
         <label for="site-description">وصف الموقع</label>
-        <input type="text" id="site-description" placeholder="أدخل وصف الموقع" required>
+        <input type="text" id="site-description" name="site-description" placeholder="أدخل وصف الموقع" required>
       </div>
       <div class="form-group">
         <label for="site-link">رابط الموقع</label>
-        <input type="url" id="site-link" placeholder="أدخل رابط الموقع" required>
+        <input type="url" id="site-link" name="site-link" placeholder="أدخل رابط الموقع" required>
       </div>
       <div class="form-group">
         <label for="site-category">تصنيف الموقع</label>
-        <input type="text" id="new-category" placeholder="أدخل تصنيف جديد">
-        <select id="existing-category">
+        <input type="text" id="new-category" name="new-category" placeholder="أدخل تصنيف جديد">
+        <select id="existing-category" name="existing-category">
           <option value="">اختر تصنيف موجود</option>
         </select>
       </div>
       <div class="form-group">
         <label for="site-icon">أيقونة الموقع</label>
-        <input type="file" id="site-icon" accept="image/*">
+        <input type="file" id="site-icon" name="site-icon" accept="image/*">
       </div>
       <button type="submit">حفظ البيانات</button>
       <button type="button" onclick="location.href='component.html'">ويب برو</button>
@@ -98,7 +98,6 @@
 
   <script>
     const categories = JSON.parse(localStorage.getItem("categories")) || [];
-    const sites = JSON.parse(localStorage.getItem("sites")) || [];
     const existingCategorySelect = document.getElementById("existing-category");
 
     function updateCategoryList() {
@@ -112,56 +111,6 @@
     }
 
     updateCategoryList();
-
-    document.getElementById("add-site-form").addEventListener("submit", function (e) {
-      e.preventDefault();
-
-      const siteName = document.getElementById("site-name").value;
-      const siteDescription = document.getElementById("site-description").value;
-      const siteLink = document.getElementById("site-link").value;
-      const newCategory = document.getElementById("new-category").value;
-      const existingCategory = document.getElementById("existing-category").value;
-      const siteIcon = document.getElementById("site-icon").files[0];
-
-      let categoryToUse;
-
-      if (newCategory) {
-        categoryToUse = newCategory;
-        if (!categories.includes(newCategory)) {
-          categories.push(newCategory);
-          localStorage.setItem("categories", JSON.stringify(categories));
-          updateCategoryList();
-        }
-      } else if (existingCategory) {
-        categoryToUse = existingCategory;
-      } else {
-        alert("يرجى اختيار تصنيف أو إضافة تصنيف جديد");
-        return;
-      }
-
-      if (!siteIcon) {
-        alert("يرجى اختيار أيقونة للموقع");
-        return;
-      }
-
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const siteData = {
-          name: siteName,
-          description: siteDescription,
-          link: siteLink,
-          category: categoryToUse,
-          icon: e.target.result, // حفظ الصورة كـ base64
-        };
-
-        sites.push(siteData);
-        localStorage.setItem("sites", JSON.stringify(sites));
-        document.getElementById("add-site-form").reset();
-        alert("تم حفظ البيانات بنجاح!");
-      };
-
-      reader.readAsDataURL(siteIcon);
-    });
   </script>
 </body>
 </html>
